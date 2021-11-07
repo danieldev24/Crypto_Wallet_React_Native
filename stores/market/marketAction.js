@@ -14,9 +14,9 @@ export const getHoldingsBegin = () => ({
   type: GET_HOLDINGS_BEGIN,
 });
 
-export const getHoldingsSuccess = (myHolding) => ({
+export const getHoldingsSuccess = (myHoldings) => ({
   type: GET_HOLDINGS_SUCCESS,
-  payload: { myHolding },
+  payload: { myHoldings },
 });
 
 export const getHoldingsFailure = (error) => ({
@@ -42,9 +42,7 @@ export function getHoldings(
       })
       .join(",");
 
-    let apiUrl =
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency='+currency+
-      '&order='+orderBy+'&per_page='+perPage+'&page='+page+'&sparkline='+sparkline+'&price_change_percentage='+priceChangePerc+'&ids='+ids;
+    let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${perPage}&page=${page}&sparkline=${sparkline}&price_change_percentage=${priceChangePerc}&ids=${ids}`
 
     return axios({
       url: apiUrl,
@@ -54,8 +52,6 @@ export function getHoldings(
       },
     })
       .then((response) => {
-          console.log("Get Holdings")
-          console.log(response)
         if (response.status == 200) {
           let myHolding = response.data.map((item) => {
             let coin = holdings.find((a) => a.id == item.id);
@@ -120,7 +116,7 @@ export function getCoinMarket(
     return dispatch => {
         dispatch(getCoinMarketBegin)
 
-        let apiUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency='+currency+'&order='+orderBy+'&per_page='+perPage+'&page='+page+'&sparkline='+sparkline+'&price_change_percentage='+priceChangePerc;
+        let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${perPage}&page=${page}&sparkline=${sparkline}&price_change_percentage=${priceChangePerc}`
 
         return axios({
             url : apiUrl,
@@ -129,8 +125,6 @@ export function getCoinMarket(
                 Accept : 'application/json'
             }
         }).then((response) => {
-            console.log("getCoinMarket")
-            console.log(response)
             if(response.status == 200){
                 dispatch(getCoinMarketSuccess(response.data))
             }else{

@@ -59,7 +59,7 @@ const MainLayout = ({children, isTradeModalVisible}) => {
             }}>
 
                 <IconTextButton
-                    label = 'Transfer'
+                    label = "Transfer"
                     icon = {icons.send}
                     onPress = {() => console.log("Transfer click")}
                 />

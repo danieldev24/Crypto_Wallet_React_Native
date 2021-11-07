@@ -1,9 +1,22 @@
 # Crypto Wallet App
 Its build-in React Native
 ### Some Screenshots
+<p float="left">
+  <img src="resources/hinh.png" width="1280" />
+</p>
 
-![Image](resources/hinh1.jpg)
-![Image](resources/hinh2.jpg)
-![Image](resources/hinh3.jpg)
+## Screens
 
+* Show your holdings
+* Market.
+* Your portfolio.
+* Setting
+
+## In App
 <img src="resources/video.gif" height="300em"/>
+
+## Download
+You can [download](resources/cryptowallet.apk) the latest installable version of Todo for Android.
+
+Le Tran Hoang Son aka Daniel
+

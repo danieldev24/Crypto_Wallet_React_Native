@@ -26,8 +26,64 @@ const Chart = ({ containerStyle, chartPrice }) => {
 
   let points = monotoneCubicInterpolation({ data, range: 40 });
 
+  const formatUSD = value => {
+    'worklet';
+    if(value === ''){
+      return '';
+    }
+
+    return `$${Number(value).toFixed(2)}`
+  }
+
+  const formatDateTime = value => {
+    'worklet'
+    if(value === ''){
+      return '';
+    }
+    var selectedDate = new Date(value*1000)
+
+    let date = `0${selectedDate.getDate()}`.slice(-2)
+    let month = `0${selectedDate.getMonth() +1}`.slice(-2)
+
+    return `${date} / ${month}`
+  }
+
   console.log(data)
   console.log(points)
+
+  const formatNumber = (value, roundingPoint) => {
+      if(value > 1e9){
+        return `${(value /1e9).toFixed(roundingPoint)}B`
+      }else if (value > 1e6) {
+        return `${(value /1e6).toFixed(roundingPoint)}M`
+      }else if (value > 1e3) {
+        return `${(value /1e3).toFixed(roundingPoint)}K`
+      }else{
+        return value.toFixed(roundingPoint)
+      }
+  }
+
+  const getYAxisLabelValues = () => {
+    if(chartPrice != undefined){
+      let minimum = Math.min(...chartPrice)
+      let maximum = Math.max(...chartPrice)
+
+      let midValue = (minimum + maximum) /2
+      let higherMidValue = (maximum + midValue) /2
+      let lowerMidValue = (minimum+midValue) /2
+
+      let roundingPoint = 2
+
+      return [
+        formatNumber(maximum,roundingPoint),
+        formatNumber(higherMidValue,roundingPoint),
+        formatNumber(lowerMidValue,roundingPoint),
+        formatNumber(minimum,roundingPoint)
+      ]
+    }else{
+      return []
+    }
+  }
 
   return (
     <View
@@ -35,6 +91,29 @@ const Chart = ({ containerStyle, chartPrice }) => {
         ...containerStyle,
       }}
     >
+      {/* Y Axis label */}
+      <View
+      style={{
+        position: 'absolute',
+        left: SIZES.padding,
+        top:0,
+        bottom: 0,
+        justifyContent: 'space-between'
+      }}
+      >
+        {getYAxisLabelValues().map((item,index) => {
+          return(
+            <Text
+            key = {index}
+            style={{
+              color: COLORS.lightGray3,
+              ...FONTS.h4
+            }}>{item}</Text>
+          )
+        })}
+
+      </View>
+      {/* Chart */}
       {data.length > 0 && (
         <ChartPathProvider
           data={{
@@ -78,8 +157,28 @@ const Chart = ({ containerStyle, chartPrice }) => {
                   }}>
 
                   </View>
-
                 </View>
+
+                 {/* Y label */}
+                 <ChartYLabel
+                      format={formatUSD}
+                      style={{
+                        color: COLORS.white,
+                        ...FONTS.body5
+                      }}
+                      />
+
+                    {/* X label */}
+
+                    <ChartXLabel
+                    format = {formatDateTime}
+                    style={{
+                      marginTop : 3,
+                      color: COLORS.lightGray3,
+                      ...FONTS.body5,
+                      lineHeight: 15
+                    }}
+                    />
             </View>
           </ChartDot>
         </ChartPathProvider>

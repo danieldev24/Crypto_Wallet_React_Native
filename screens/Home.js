@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 
 import { MainLayout } from "./";
 
@@ -7,9 +7,9 @@ import { connect } from "react-redux";
 import { getHoldings, getCoinMarket } from "../stores/market/marketAction";
 import { useFocusEffect } from "@react-navigation/native";
 import { COLORS, FONTS, SIZES, icons, dummyData } from "../constants";
-import { BalanceInfo, IconTextButton ,Chart} from "../components";
-
+import { BalanceInfo, IconTextButton, Chart } from "../components";
 const Home = ({ getHoldings, getCoinMarket, myHoldings, coins }) => {
+  const [selectedCoin, setSelectedCoin] = React.useState(null)
   useFocusEffect(
     React.useCallback(() => {
       getHoldings(dummyData.holdings);
@@ -60,7 +60,7 @@ const Home = ({ getHoldings, getCoinMarket, myHoldings, coins }) => {
             containerStyle={{
               flex: 1,
               height: 40,
-              marginRight : SIZES.radius
+              marginRight: SIZES.radius,
             }}
             onPress={() => console.log("Transfer click")}
           />
@@ -70,7 +70,7 @@ const Home = ({ getHoldings, getCoinMarket, myHoldings, coins }) => {
             icon={icons.withdraw}
             containerStyle={{
               flex: 1,
-              height: 40
+              height: 40,
             }}
             onPress={() => console.log("Withdraw click")}
           />
@@ -93,11 +93,144 @@ const Home = ({ getHoldings, getCoinMarket, myHoldings, coins }) => {
 
         <Chart
           containerStyle={{
-            marginTop: SIZES.padding*2
+            marginTop: SIZES.padding * 2,
           }}
-          chartPrice = {coins[0]?.sparkline_in_7d?.price}
+          chartPrice={selectedCoin? selectedCoin?.sparkline_in_7d?.price : coins[0]?.sparkline_in_7d?.price}
         />
 
+        {/* Top currency */}
+
+        <FlatList
+          data={coins}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{
+            marginTop: 30,
+            paddingHorizontal: SIZES.padding,
+          }}
+          ListHeaderComponent={
+            <View
+              style={{
+                marginBottom: SIZES.radius,
+              }}
+            >
+              <Text
+                style={{
+                  color: COLORS.white,
+                  ...FONTS.h3,
+                  fontSize: 18,
+                }}
+              >
+                Top Cryptocurrency
+              </Text>
+            </View>
+          }
+          renderItem={({ item }) => {
+            let priceColor =
+              item.price_change_percentage_7d_in_currency == 0
+                ? COLORS.lightGray3
+                : item.price_change_percentage_7d_in_currency > 0
+                ? COLORS.lightGreen
+                : COLORS.red;
+            return (
+              <TouchableOpacity
+                style={{
+                  height: 55,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress = {() => setSelectedCoin(item)}
+              >
+                {/* Logo */}
+                <View
+                  style={{
+                    width: 35,
+                  }}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{
+                      height: 20,
+                      width: 20,
+                    }}
+                  />
+                </View>
+
+                {/* Name */}
+
+                <View
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      ...FONTS.h3,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+
+                {/* figure */}
+                <View>
+                  <Text
+                    style={{
+                      textAlign: "right",
+                      color: COLORS.white,
+                      ...FONTS.h4,
+                    }}
+                  >
+                    {" "}
+                    {item.current_price}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    {item.price_change_percentage_7d_in_currency != 0 && (
+                      <Image
+                        source={icons.upArrow}
+                        style={{
+                          height: 10,
+                          width: 10,
+                          tintColor: priceColor,
+                          transform:
+                            item.price_change_percentage_7d_in_currency > 0
+                              ? [{ rotate: "45deg" }]
+                              : [{ rotate: "125deg" }],
+                        }}
+                      />
+                    )}
+
+                    <Text
+                      style={{
+                        marginLeft: 5,
+                        color: priceColor,
+                        ...FONTS.body5,
+                        lineHeight: 15,
+                      }}
+                    >
+                      {item.price_change_percentage_7d_in_currency.toFixed(2)}%
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+          ListFooterComponent = {
+            <View
+              style={{
+                marginBottom: 50
+              }}
+            />
+          }
+        />
       </View>
     </MainLayout>
   );

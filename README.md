@@ -6,4 +6,4 @@ Its build-in React Native
 ![Image](resources/hinh2.jpg)
 ![Image](resources/hinh3.jpg)
 
-<img src="resource/video.gif" height="300em"/>
+<img src="resources/video.gif" height="300em"/>

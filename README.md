@@ -16,7 +16,7 @@ Its build-in React Native
 <img src="resources/video.gif" height="300em"/>
 
 ## Download
-You can [download](resources/cryptowallet.apk) the latest installable version of Todo for Android.
+You can [download](resources/cryptowallet.apk) the latest installable version of Crypto Wallet for Android.
 
 Le Tran Hoang Son aka Daniel
 
